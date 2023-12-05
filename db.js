@@ -41,7 +41,7 @@ async function connectToMongo() {
       console.error(`Error connecting to MongoDB: ${error.message}`);
       retries++;
       // Add some delay before retrying
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 20000));
     }
   }
   if (retries === maxRetries) {
