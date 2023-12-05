@@ -53,7 +53,7 @@ router.post('/createUser',[
         }
       const {email,password} = req.body
       try {
-       let userFound = await users.findOne({email: req.body.email})
+       let userFound = await users.findOne({ email: req.body.email }).timeout(20000);
        if (!userFound){
             return res.status(400).json({ errors: 'Please enter valid credentials' });  
           }

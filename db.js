@@ -27,29 +27,14 @@ const client = new MongoClient(uri, {
 //   }
 // }
 async function connectToMongo() {
-  const maxRetries = 5;
-  let retries = 0;
-
-  while (retries < maxRetries) {
-    try {
-      console.log(`Attempting to connect to MongoDB (Retry ${retries + 1})...`);
-      await client.connect();
-      await client.db("admin").command({ ping: 1 });
-      console.log("Connected to MongoDB!");
-      break; // Connection successful, exit the loop
+  try {
+    await client.connect();
+      await client.db("admin").command({ ping: 1 }); 
     } catch (error) {
       console.error(`Error connecting to MongoDB: ${error.message}`);
-      retries++;
-      // Add some delay before retrying
-      await new Promise(resolve => setTimeout(resolve, 20000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
   }
-  if (retries === maxRetries) {
-    console.error("Max retries reached. Unable to establish a connection to MongoDB.");
-    throw new Error("Unable to connect to MongoDB");
-  }
-}
-
-
 connectToMongo().catch(console.dir);
 module.exports = connectToMongo;
+
