@@ -15,7 +15,7 @@ const startServer = async () => {
     await connectToMongo();
     console.log("Connected to MongoDB!");
     app.get('/', (req, res) => {
-      res.send('Hello World!');
+      res.send('Hello World! The Changes have been deployed!!!');
     });
 
     app.listen(port, () => {
