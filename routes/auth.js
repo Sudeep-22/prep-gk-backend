@@ -19,7 +19,7 @@ router.post('/createUser',[
           return res.status(400).json({ errors: errors.array() });
         }
         try{
-      let userFound = await users.findOne({email: req.body.email})
+      let userFound = await users.findOne({email: req.body.email}).timeout(15000);
        if (userFound){
             return res.status(400).json({ errors: 'This email id is already in use. Please use a different email id' });  
           }
