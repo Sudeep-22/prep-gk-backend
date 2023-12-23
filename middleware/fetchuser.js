@@ -10,7 +10,7 @@ const fetchuser = (req,res,next) =>{
             res.status(401).send("Please use a valid auth code")
         }
         else{
-            req.user=data.user;
+            req.users=data.users;
             next();
         }
 

@@ -13,7 +13,6 @@ app.use('/api/notes', require('./routes/notes'));
 const startServer = async () => {
   try {
     await connectToMongo();
-    console.log("Connected to MongoDB!");
     app.get('/', (req, res) => {
       res.send('Hello World! The Changes have been deployed!!!');
     });

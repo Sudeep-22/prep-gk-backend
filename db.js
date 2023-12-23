@@ -1,14 +1,7 @@
 require('dotenv/config');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const mongoose = require('mongoose');
 const uri = process.env.MONGODB_URI
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
 // async function connectToMongo() {
 //   try {
 //     // Connect the client to the server	(optional starting in v4.7)
@@ -26,15 +19,29 @@ const client = new MongoClient(uri, {
 //     await client.close();
 //   }
 // }
-async function connectToMongo() {
+// async function connectToMongo() {
+//   try {
+//     mongoose.connect(uri);
+//       await client.db("admin").command({ ping: 1 });
+//       const db = client.db("GK-Prep");
+//          // Reference the "people" collection in the specified database
+//          const users = db.collection("users"); 
+//          const notes = db.collection("notes"); 
+//         } catch (error) {
+//       console.error(`Error connecting to MongoDB: ${error.message}`);
+//       await new Promise(resolve => setTimeout(resolve, 1000));
+//     }
+//   }
+async function connectToMongo(){
+  mongoose.connection.on('connected', () => console.log('connected'));
   try {
-    await client.connect();
-      await client.db("admin").command({ ping: 1 }); 
-    } catch (error) {
-      console.error(`Error connecting to MongoDB: ${error.message}`);
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
+    await mongoose.connect(uri);
+  } catch (error) {
+    handleError(error);
   }
-connectToMongo().catch(console.dir);
+}
+
 module.exports = connectToMongo;
+
+
 

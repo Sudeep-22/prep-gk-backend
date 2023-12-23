@@ -2,14 +2,14 @@ const express = require('express')
 const router = express.Router();
 const fetchuser = require('../middleware/fetchuser')
 const { body, validationResult } = require('express-validator');
-const Note = require("../models/Notes")
+const notes = require("../models/Notes")
 
 // Fetching notes for a particular User
 router.get('/fetchNotes', fetchuser,async (req, res) =>{
     try {
         userId = req.user.id
-        const notes = await Note.find({user:req.user.id})
-        res.json(notes)
+        const note = await notes.find({user:req.user.id})
+        res.json(note)
       } catch (error) {
         res.status(500).send({error: error.message});
       }
@@ -25,7 +25,7 @@ router.post('/addNotes', fetchuser,[
       if (!errors.isEmpty()) {
           return res.status(400).json({ errors: errors.array() });
         }
-        const note= await Note.create({
+        const note= await notes.create({
             title: req.body.title,
             content: req.body.content,
             user:req.user.id
@@ -42,11 +42,11 @@ router.put('/updateNotes/:id', fetchuser,async (req, res) =>{
     const newNote = {};
     if (title){newNote.title = title}
     if (content){newNote.content = content}
-    let notes = await Note.findById(req.params.id)
+    let note = await notes.findById(req.params.id)
     if(!notes){return res.status(404).send("Note not found")};
     if (notes.user.toString() !== req.user.id) {return res.status(401).send("Unauthorized")}
-    notes = await Note.findByIdAndUpdate(req.params.id,{$set: newNote},{new:true})
-    res.json({notes})
+    note = await notes.findByIdAndUpdate(req.params.id,{$set: newNote},{new:true})
+    res.json({note})
     }catch(error) {
       res.status(500).send({error: error.message});
     }
@@ -55,10 +55,10 @@ router.put('/updateNotes/:id', fetchuser,async (req, res) =>{
   // Deleting the note after verification
   router.delete('/deleteNotes/:id', fetchuser,async (req, res) =>{
     try {
-    let notes = await Note.findById(req.params.id)
-    if(!notes){return res.status(404).send("Note not found")};
-    if (notes.user.toString() !== req.user.id) {return res.status(401).send("Unauthorized")}
-    notes = await Note.findByIdAndDelete(req.params.id)
+    let note = await notes.findById(req.params.id)
+    if(!note){return res.status(404).send("Note not found")};
+    if (note.user.toString() !== req.user.id) {return res.status(401).send("Unauthorized")}
+    note = await notes.findByIdAndDelete(req.params.id)
     res.json({"Sucess!! Deleted the following note":notes})
     }catch(error) {
       res.status(500).send({error: error.message});
