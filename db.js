@@ -37,7 +37,7 @@ async function connectToMongo(){
   try {
     await mongoose.connect(uri);
   } catch (error) {
-    handleError(error);
+    console.log(error);
   }
 }
 
