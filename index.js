@@ -14,7 +14,7 @@ const startServer = async () => {
   try {
     await connectToMongo();
     app.get('/', (req, res) => {
-      res.send('Hello World! The Changes have been deployed!!!');
+      res.send('Hello World! The Static ips have been added deployed!!!');
     });
 
     app.listen(port, () => {
