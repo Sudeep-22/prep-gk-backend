@@ -82,4 +82,12 @@ router.post('/getUser',fetchuser,async(req, res) =>{
     res.status(500).send({error: error.message,location: "post"});
   }
 })
+
+router.get('/info', [], async(req, res)=>{
+try{
+  res.json({success:true, isWorking: true});
+} catch(error) {
+    res.status(500).send({error: error.message});
+}
+});
 module.exports = router
