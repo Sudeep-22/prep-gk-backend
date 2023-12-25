@@ -53,13 +53,13 @@ router.post('/createUser',[
         }
       const {email,password} = req.body
       try {
-       let userFound = await users.findOne({ email: req.body.email }).timeout(20000);
+       let userFound = await users.findOne({ email: email })
        if (!userFound){
-            return res.status(400).json({ errors: 'Please enter valid credentials' });  
+            return res.status(400).json({ errors: 'Email id not found' });  
           }
         const passwordCompare = await bcrypt.compare(password,userFound.password);
         if (!passwordCompare){
-            return res.status(400).json({ errors: 'Please enter valid credentials' });  
+            return res.status(400).json({ errors: 'Please enter valid Password' });  
           }
           const data = {
             'user':{
