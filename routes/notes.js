@@ -7,7 +7,6 @@ const notes = require("../models/Notes")
 // Fetching notes for a particular User
 router.get('/fetchNotes', fetchuser,async (req, res) =>{
     try {
-        userId = req.users.id
         const note = await notes.find({user:req.users.id})
         res.json(note)
       } catch (error) {
