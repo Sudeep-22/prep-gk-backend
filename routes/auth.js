@@ -7,13 +7,20 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const fetchuser = require('../middleware/fetchuser')
 
+const timeout = require('connect-timeout'); // <--- ADD THIS LINE
+
+// Apply a timeout middleware (e.g., 5 seconds) to routes
+const TIMEOUT_DURATION = '5s'; // Set your desired timeout here
+
 const JWT_SECRET = process.env.JWT_SECRET;
 // Create a user
-router.post('/createUser',[
+router.post('/createUser',
+  timeout(TIMEOUT_DURATION),[
     body('name','Enter a valid name').isLength({ min: 3 }),
     body('email','Enter a proper email id').isEmail(),
     body('password','Password should be minimum 8 characters').isLength({ min: 8 })
   ],async(req, res) =>{
+    if (req.timedout) return;
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
           return res.status(400).json({ errors: errors.array() });
@@ -39,14 +46,16 @@ router.post('/createUser',[
         res.json({success:true,authToken:authToken});
     }
         catch(error){
-            res.status(500).send({error: error.message});
+          if(!req.timedout) res.status(500).send({error: error.message});
         }
     });
 // Autheticate a user
-    router.post('/login',[
+    router.post('/login',
+      timeout(TIMEOUT_DURATION),[
         body('email','Enter a proper email id').isEmail(), 
         body('password','Enter the password').exists(), 
       ],async(req, res) =>{
+        if (req.timedout) return;
         const errors = validationResult(req);
       if (!errors.isEmpty()) {
           return res.status(400).json({ errors: errors.array() });
@@ -69,13 +78,13 @@ router.post('/createUser',[
         const authToken = jwt.sign(data, JWT_SECRET);
         res.json({success:true,authToken:authToken});
       } catch (error) {
-        res.status(500).send({error: error.message});
+        if(!req.timedout) res.status(500).send({error: error.message});
       }
     })
 // Get logged in user details
 router.post('/getUser',fetchuser,async(req, res) =>{
   try {
-    userId = req.user.id
+    const userId = req.user.id
     let userFound = await users.findById(userId)
     res.send({userFound})
   } catch (error) {
