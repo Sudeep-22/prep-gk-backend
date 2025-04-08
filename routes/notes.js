@@ -29,7 +29,7 @@ router.post('/addNotes', fetchuser,[
             content: req.body.content,
             user:req.users.id
         })
-        res.send("Notes created successfully")
+        res.send({ message : "Notes created successfully"})
       } catch (error) {
         res.status(500).send({error: error.message});
       }
